@@ -55,7 +55,7 @@
   )
 )
 
-(def fitness-on-data [creatureFn [x y]]
+(defn fitness-on-data [creatureFn [x y]]
   (math/abs (- y (creatureFn x)))
 )
 
