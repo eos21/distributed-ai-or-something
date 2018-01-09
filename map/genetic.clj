@@ -4,9 +4,9 @@
 (def gene '(fn [x]))
 
 (def population '(
-  (+ x 1)
+  (+ x 10)
   (- x 2 3)
-  (* x 10)
+  (* x 1)
 ))
 
 (println ((eval (concat gene (first population))) 1))
@@ -32,10 +32,11 @@
 (defn pad [n coll val]
   (take n (concat coll (repeat val))))
 
-(def new-population (take population-size (repeatedly #(breed population))))
+(def new-population (distinct (concat population
+  (take population-size (repeatedly #(breed population))))))
 
 (defn fitness [creature]
-  ((eval (concat gene creature)) 1)
+  ((eval (concat gene [creature])) 1)
 )
-
-(map fitness new-population)
+(println (map fitness new-population))
+(reverse (sort-by fitness new-population))
