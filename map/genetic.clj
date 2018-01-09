@@ -52,19 +52,19 @@
   )
 )
 
-(defn fitness [creature]
-  ; (let [score ((eval (concat '(fn [x]) [creature])) 1)]
-  ;   (println score creature)
-  ;   score
-  ; )
-  ; (println (count (flatten  creature)) creature)
-  (count (flatten creature))
+(defn fitness [data creature]
+  (let [
+    creatureFn (eval (concat '(fn [x]) [creature]))
+    score (creatureFn 1)
+  ]
+    score
+  )
 )
 
-(defn epoch [population]
+(defn epoch [population data]
   (let [new-population (distinct (concat population (take population-size (repeatedly #(breed population)))))]
     (println "population size" (count new-population))
-    (take 10 (reverse (sort-by fitness new-population)))
+    (take 10 (reverse (sort-by (partial fitness data) new-population)))
   )
 )
 
@@ -74,13 +74,12 @@
   (* x 1)
 ))
 
-(dotimes [n 100]
+(dotimes [n 10]
   (println "epoch" n)
-  (def population (epoch population))
-  nil
+  (def population (epoch population []))
 )
 
 (println
-  (count (flatten (first population)))
+  (fitness [] (first population))
   (count population) population
 )
