@@ -1,3 +1,6 @@
+(ns genetics.population
+  (:require [genetics.math :as math] ))
+
 (def operations '(+ - * /))
 (def mutation-rate 0.05)
 (def population-size 100)
@@ -52,12 +55,15 @@
   )
 )
 
+(def fitness-on-data [creatureFn [x y]]
+  (math/abs (- y (creatureFn x)))
+)
+
 (defn fitness [data creature]
   (let [
     creatureFn (eval (concat '(fn [x]) [creature]))
-    score (creatureFn 1)
   ]
-    score
+    (math/mean (map (partial fitness-on-data creatureFn) data))
   )
 )
 
@@ -67,9 +73,3 @@
     (take 10 (reverse (sort-by (partial fitness data) new-population)))
   )
 )
-
-(def population '(
-  (+ x 10)
-  (- x 2)
-  (* x 1)
-))
