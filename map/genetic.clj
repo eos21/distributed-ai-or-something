@@ -6,16 +6,23 @@
 (def population '(
   (+ x 1)
   (- x 2)
+  (* x 10)
 ))
 
 (println ((eval (concat gene (first population))) 1))
 
+
+(defn pick-gene [dad-gene mom-gene]  
+  (if (> (rand-int 2) 0) dad-gene mom-gene)
+)
+
 (defn breed [population]
   (let [
-      creature1 (rand-nth population)
-      creature2 (rand-nth population)
-    ]    
+      dad (rand-nth population)
+      mom (rand-nth population)
+    ]
+    (map pick-gene dad mom)
   )
 )
 
-(take 5 (repeatedly #(breed population)))
+(take population-size (repeatedly #(breed population)))
