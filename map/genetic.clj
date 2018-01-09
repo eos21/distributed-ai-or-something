@@ -37,4 +37,5 @@
   (take population-size (repeatedly #(breed population))))))
 
 (println (map fitness population))
-(reverse (sort-by fitness population))
+(println population)
+(def population (take (/ population-size 10) (reverse (sort-by fitness population))))
