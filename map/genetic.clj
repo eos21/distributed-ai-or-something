@@ -5,24 +5,31 @@
 
 (def population '(
   (+ x 1)
-  (- x 2)
+  (- x 2 3)
   (* x 10)
 ))
 
 (println ((eval (concat gene (first population))) 1))
 
 
-(defn pick-gene [dad-gene mom-gene]  
-  (if (> (rand-int 2) 0) dad-gene mom-gene)
+(defn rand-gene [genes]
+  (if (empty? genes) nil (rand-nth genes))
+)
+
+(defn pick-gene [& args]
+  (rand-gene (remove nil? args))
 )
 
 (defn breed [population]
   (let [
-      dad (rand-nth population)
-      mom (rand-nth population)
+      dad (pad 100 (rand-nth population) nil)
+      mom (pad 100 (rand-nth population) nil)
     ]
-    (map pick-gene dad mom)
+    (remove nil? (map pick-gene dad mom))
   )
 )
+
+(defn pad [n coll val]
+  (take n (concat coll (repeat val))))
 
 (take population-size (repeatedly #(breed population)))
