@@ -32,4 +32,10 @@
 (defn pad [n coll val]
   (take n (concat coll (repeat val))))
 
-(take population-size (repeatedly #(breed population)))
+(def new-population (take population-size (repeatedly #(breed population))))
+
+(defn fitness [creature]
+  ((eval (concat gene creature)) 1)
+)
+
+(map fitness new-population)
