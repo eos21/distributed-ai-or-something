@@ -10,6 +10,3 @@
     (println "epoch" n)
     (def population (epoch population []))
   ))
-
-
-  
