@@ -1,6 +1,6 @@
 (def operations '(+ - * /))
 (def mutation-rate 0.5)
-(def population-size 10)
+(def population-size 100)
 (def gene '(fn [x]))
 
 (def population '(
@@ -8,9 +8,6 @@
   (- x 2 3)
   (* x 1)
 ))
-
-(println ((eval (concat gene (first population))) 1))
-
 
 (defn rand-gene [genes]
   (if (empty? genes) nil (rand-nth genes))
@@ -32,11 +29,12 @@
 (defn pad [n coll val]
   (take n (concat coll (repeat val))))
 
-(def new-population (distinct (concat population
-  (take population-size (repeatedly #(breed population))))))
-
 (defn fitness [creature]
   ((eval (concat gene [creature])) 1)
 )
-(println (map fitness new-population))
-(reverse (sort-by fitness new-population))
+
+(def population (distinct (concat population
+  (take population-size (repeatedly #(breed population))))))
+
+(println (map fitness population))
+(reverse (sort-by fitness population))
