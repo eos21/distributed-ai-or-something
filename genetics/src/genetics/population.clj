@@ -73,13 +73,3 @@
   (- x 2)
   (* x 1)
 ))
-
-(dotimes [n 10]
-  (println "epoch" n)
-  (def population (epoch population []))
-)
-
-(println
-  (fitness [] (first population))
-  (count population) population
-)

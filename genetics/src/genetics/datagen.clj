@@ -1,4 +1,4 @@
-(ns datagen)
+(ns genetics.datagen)
 
 (defn create-data-point [i]
   "generate a (x y) pair where y = 2x"
