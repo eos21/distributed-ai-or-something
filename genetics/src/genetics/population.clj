@@ -55,16 +55,12 @@
   )
 )
 
-(defn fitness-on-data [creatureFn [x y]]
-  (math/abs (- y (creatureFn x)))
-)
+(defn fitness-on-data [creature creatureFn [x y]]
+      (+ (math/abs (- y (creatureFn x))) (* (count (flatten creature)) 0.01)))
 
 (defn fitness [data creature]
-  (let [
-    creatureFn (eval (concat '(fn [x]) [creature]))
-  ]
-    (math/mean (map (partial fitness-on-data creatureFn) data))
-  )
+  (let [creatureFn (eval (concat '(fn [x]) [creature]))]
+    (math/mean (map (partial fitness-on-data creature creatureFn) data)))
 )
 
 (defn epoch [population data]
