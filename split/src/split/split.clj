@@ -5,5 +5,5 @@
 
 (defn split-input [input]
   "generate inputs for islands derived from a starter population"
-  (let [{children :children population :population} input]
-    (map (partial merge-input input) (partition children children nil population))))
+  (let [{n :childrenThatSurvive population :population} input]
+    (map (partial merge-input input) (partition n n nil population))))
