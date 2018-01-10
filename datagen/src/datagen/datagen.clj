@@ -1,15 +1,15 @@
-(ns genetics.datagen)
+(ns datagen.generate)
 
-(defn create-data-point [x]
+(defn generate-data-point [x]
   "generate a (x y) pair where y = 2x"
   ; y = 2(x + 3)
   ; y = 2x + 6
   ; (list x (* 2 x)))
   (list x (* 2 (+ x 3))))
 
-(defn create-data [n]
+(defn generate-data [n f]
   "generate n (x y) pairs where y = 2x"
-  (map create-data-point (range n)))
+  (map f (range n)))
 
 ; (create-data 5)
 ; (create-data 10)
