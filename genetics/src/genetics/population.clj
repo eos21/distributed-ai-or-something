@@ -17,6 +17,7 @@
 )
 
 (declare mutate)
+(declare possibly-mutate-gene)
 
 (defn random-operation-gene [gene] (rand-nth operations))
 
@@ -28,10 +29,17 @@
   ])
 )
 
+(defn random-list-gene [gene]
+  (if (< (rand) 0.1)
+    (map possibly-mutate-gene gene)
+    (rand-nth (rest gene))
+  )
+)
+
 (defn mutate-gene [gene]
   (cond
     (some #(= gene %) operations) (random-operation-gene gene)
-    (list? gene) (mutate gene)
+    (list? gene) (random-list-gene gene)
     :else (random-number-gene gene)
   )
 )
@@ -65,6 +73,7 @@
 
 (defn epoch [population data]
   (let [new-population (distinct (concat population (take population-size (repeatedly #(breed population)))))]
+    (println "population size" (count new-population))
     (take 10 (sort-by (partial fitness data) new-population))
   )
 )
