@@ -4,8 +4,8 @@
   "generate a (x y) pair where y = 2x"
   ; y = 2(x + 3)
   ; y = 2x + 6
-  (list x (* 2 x)))
-  ; (list i (* 2 (+ i 3))))
+  ; (list x (* 2 x)))
+  (list x (* 2 (+ x 3))))
 
 (defn create-data [n]
   "generate n (x y) pairs where y = 2x"

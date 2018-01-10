@@ -18,9 +18,10 @@
   ))
   (dotimes [n 100]
     (println "epoch" n)
-    (def generation (population/epoch generation data)))
-    (doall (map print-fitness generation))
+    (def generation (population/epoch generation data))
     (print-fitness (first generation)))
+  (doall (map print-fitness generation))
+  (print-fitness (first generation)))
 
 (defn -main
   "I don't do a whole lot ... yet."

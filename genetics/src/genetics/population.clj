@@ -65,7 +65,6 @@
 
 (defn epoch [population data]
   (let [new-population (distinct (concat population (take population-size (repeatedly #(breed population)))))]
-    (println "population size" (count new-population))
     (take 10 (sort-by (partial fitness data) new-population))
   )
 )
