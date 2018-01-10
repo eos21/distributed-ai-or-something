@@ -1,7 +1,14 @@
 (ns genetics.core
   (:gen-class)
   (:require [genetics.datagen :as datagen]
-            [genetics.population]))
+            [genetics.population :as population]))
+
+(def data (datagen/create-data 100))
+
+(defn print-fitness [creature]
+  (println
+    (population/fitness data creature)
+    creature))
 
 (defn run []
   (def generation '(
@@ -11,10 +18,9 @@
   ))
   (dotimes [n 100]
     (println "epoch" n)
-    (def generation (epoch generation (datagen/create-data 5)))
-  )
-    (print (first generation))
-  )
+    (def generation (population/epoch generation data)))
+    (doall (map print-fitness generation))
+    (print-fitness (first generation)))
 
 (defn -main
   "I don't do a whole lot ... yet."

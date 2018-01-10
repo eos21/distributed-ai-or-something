@@ -1,7 +1,7 @@
 (ns genetics.population
   (:require [genetics.math :as math] ))
 
-(def operations '(+ - * /))
+(def operations '(+ - *))
 (def mutation-rate 0.05)
 (def population-size 100)
 
@@ -70,6 +70,6 @@
 (defn epoch [population data]
   (let [new-population (distinct (concat population (take population-size (repeatedly #(breed population)))))]
     (println "population size" (count new-population))
-    (take 10 (reverse (sort-by (partial fitness data) new-population)))
+    (take 10 (sort-by (partial fitness data) new-population))
   )
 )
