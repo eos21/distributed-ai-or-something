@@ -1,36 +1,21 @@
-# datagen
+# Datagen
 
-FIXME: description
-
-## Installation
-
-Download from http://example.com/FIXME.
+Generate a bunch of training data for the genetic algorithm.
 
 ## Usage
 
-FIXME: explanation
+The usage is `lein run <n> <algorithm>`.
 
-    $ java -jar datagen-0.1.0-standalone.jar [args]
+* `<n>` indicates the number of (x y) pairs to generate
+* `<algorithm>` is a clojure function that takes x and outputs y. For example:
+  * '(* x 2)' # y = 2x
+  * '(* x (+ 2 x))' # y = 2x + x²
 
-## Options
+The output is a JSON string of (x y) pairs.
 
-FIXME: listing of options this app accepts.
+```shell
+#!/bin/bash
 
-## Examples
-
-...
-
-### Bugs
-
-...
-
-### Any Other Sections
-### That You Think
-### Might be Useful
-
-## License
-
-Copyright © 2018 FIXME
-
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
+lein run 5 '(* x 2)'
+#> [[0,0],[1,2],[2,4],[3,6],[4,8]]
+```
