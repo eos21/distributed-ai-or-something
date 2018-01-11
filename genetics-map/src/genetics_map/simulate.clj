@@ -26,12 +26,15 @@
     (list '- gene 1)
     (list '+ gene 1)
     (list '+ gene 'x)
+    (list '- gene 'x)
   ]))
 
 (defn random-list-gene [gene]
-  (if (< (rand) 0.1)
-    (map possibly-mutate-gene gene)
-    (rand-nth (rest gene))))
+  (let [dice (rand)]
+    (cond
+      (< dice 0.1) (map possibly-mutate-gene gene)
+      (< dice 0.2) (conj gene [(random-number-gene 1)]))
+      :else (rand-nth (rest gene))))
 
 (defn mutate-gene [gene]
   (cond
