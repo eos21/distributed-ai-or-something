@@ -1,7 +1,7 @@
-(ns split.core
+(ns genetics-split.core
   (:gen-class)
-  (:require [split.input :refer [parse-input]]
-            [split.split :refer [split-input]]
+  (:require [genetics-split.input :refer [parse-input]]
+            [genetics-split.split :refer [split-input]]
             [clojure.data.json :as json]))
 
 (defn -main

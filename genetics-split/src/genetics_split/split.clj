@@ -1,4 +1,4 @@
-(ns split.split)
+(ns genetics-split.split)
 
 (defn merge-input [input population]
   (merge input {:population population}))
