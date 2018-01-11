@@ -3,7 +3,7 @@
             [random-seed.core :refer [rand rand-int rand-nth]])
   (:refer-clojure :exclude [rand rand-int rand-nth]))
 
-(def operations '(+ - *))
+(def operations '(+ - * /))
 (def mutation-rate 0.05)
 (def population-size 100)
 
@@ -58,7 +58,9 @@
     (mutate (remove nil? (map pick-gene dad mom)))))
 
 (defn fitness-on-data [creature creatureFn [x y]]
-      (+ (math/abs (- y (creatureFn x))) (* (count (flatten creature)) 0.01)))
+    (try
+      (+ (math/abs (- y (creatureFn x))) (* (count (flatten creature)) 0.01))
+      (catch Exception e Double/POSITIVE_INFINITY)))
 
 (defn fitness [data creature]
   (let [creatureFn (eval (concat '(fn [x]) [creature]))]
