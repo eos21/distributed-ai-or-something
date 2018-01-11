@@ -1,4 +1,6 @@
-(ns popgen.generate)
+(ns popgen.generate
+  (:require [random-seed.core :refer [rand rand-int rand-nth]])
+  (:refer-clojure :exclude [rand rand-int rand-nth]))
 
 (defn random-number []
   (rand-nth (range 10)))

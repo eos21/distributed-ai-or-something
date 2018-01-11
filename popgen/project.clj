@@ -6,7 +6,8 @@
   :dependencies [
     [org.clojure/clojure "1.9.0"]
     [org.clojure/data.json "0.2.6"]
-  ]  
+    [random-seed "1.0.0"]
+  ]
   :main ^:skip-aot popgen.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}})
