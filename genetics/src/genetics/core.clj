@@ -1,29 +1,41 @@
 (ns genetics.core
   (:gen-class)
-  (:require [genetics.datagen :as datagen]
-            [genetics.population :as population]))
+  (:require
+    [clojure.data.json :as json]
+    [clojure.string :refer [join]]
+    [genetics.input :refer [parse-input]]
+    [genetics.simulate :as simulate]
+    [random-seed.core :refer [set-random-seed!]]))
 
-(def data (datagen/create-data 100))
+(defn println-error [& strs]
+  (.println *err* (join " " strs)))
 
-(defn print-fitness [creature]
-  (println
-    (population/fitness data creature)
-    creature))
+; (defn print-fitness [creature]
+;   (println
+;     (simulate/fitness data creature)
+;     creature))
 
-(defn run []
-  (def generation '(
-    (+ x 10)
-    (- x 2)
-    (* x 1)
-  ))
-  (dotimes [n 100]
-    (println "epoch" n)
-    (def generation (population/epoch generation data))
-    (print-fitness (first generation)))
-  (doall (map print-fitness generation))
-  (print-fitness (first generation)))
+(defn format-creature [creature]
+  (str (apply list creature)))
+
+(defn run [population trainingData children childrenThatSurvive epochs seed]
+  "Simulate an island"
+  (set-random-seed! seed)
+  (def generation population)
+  (dotimes [n epochs]
+    (println-error "epoch" (format "%s/%s" n epochs))
+    (def generation (simulate/epoch generation trainingData children childrenThatSurvive)))
+  (println (json/write-str {
+    :population (map format-creature generation)
+    :trainingData trainingData
+    :children children
+    :childrenThatSurvive childrenThatSurvive
+    :epochs epochs
+    :seed seed
+    })))
 
 (defn -main
-  "I don't do a whole lot ... yet."
+  "Simulate an island with input from stdin"
   [& args]
-  (run))
+  (let [{:keys [population trainingData children childrenThatSurvive epochs seed]} (parse-input (slurp *in*))]
+    (run population trainingData children childrenThatSurvive epochs seed)))
