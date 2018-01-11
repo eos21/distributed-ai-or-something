@@ -1,10 +1,10 @@
-(ns genetics.core
+(ns genetics-map.core
   (:gen-class)
   (:require
     [clojure.data.json :as json]
     [clojure.string :refer [join]]
-    [genetics.input :refer [parse-input]]
-    [genetics.simulate :as simulate]
+    [genetics-map.input :refer [parse-input]]
+    [genetics-map.simulate :as simulate]
     [random-seed.core :refer [set-random-seed!]]))
 
 (defn println-error [& strs]

@@ -1,5 +1,5 @@
-(ns genetics.simulate
-  (:require [genetics.math :as math]
+(ns genetics-map.simulate
+  (:require [genetics-map.math :as math]
             [random-seed.core :refer [rand rand-int rand-nth]])
   (:refer-clojure :exclude [rand rand-int rand-nth]))
 

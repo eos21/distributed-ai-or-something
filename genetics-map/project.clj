@@ -1,6 +1,6 @@
-(defproject genetics "1.0.0"
+(defproject genetics-map "1.0.0"
   :description "Simulate multiple breed/culling epochs on an island"
-  :url "https://github.com/computes/distributed-ai-or-something/tree/master/genetics"
+  :url "https://github.com/computes/distributed-ai-or-something/tree/master/genetics-map"
   :license {:name "MIT"
             :url "https://opensource.org/licenses/MIT"}
   :dependencies [
@@ -9,6 +9,6 @@
     [proto-repl "0.3.1"]
     [random-seed "1.0.0"]
   ]
-  :main ^:skip-aot genetics.core
+  :main ^:skip-aot genetics-map.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}})

@@ -1,4 +1,4 @@
-(ns genetics.input
+(ns genetics-map.input
   (:require [clojure.data.json :as json]))
 
 (defn parse-population [population]

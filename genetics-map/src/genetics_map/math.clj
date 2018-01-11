@@ -1,4 +1,4 @@
-(ns genetics.math)
+(ns genetics-map.math)
 
 (defn mean [col]
   (/ (reduce + col) (count col)))
