@@ -7,43 +7,37 @@ jobs:
     machine: true
     steps:
       - checkout
-      - run: cd genetics-split
-      - run: docker build .
+      - run: docker build genetics-split
   build-map:
     machine: true
     steps:
       - checkout
-      - run: cd genetics-map
-      - run: docker build .
+      - run: docker build genetics-map
   build-reduce:
     machine: true
     steps:
       - checkout
-      - run: cd genetics-reduce
-      - run: docker build .
+      - run: docker build genetics-reduce
   build-and-deploy-split:
     machine: true
     steps:
       - checkout
-      - run: cd genetics-split
       - run: docker login -u $DOCKER_USER -p $DOCKER_PASS
-      - run: docker build -t computes/distributed-ai-or-something:split-$CIRCLE_TAG .
+      - run: docker build -t computes/distributed-ai-or-something:split-$CIRCLE_TAG genetics-split
       - run: docker push computes/distributed-ai-or-something:split-$CIRCLE_TAG
   build-and-deploy-map:
     machine: true
     steps:
       - checkout
-      - run: cd genetics-map
       - run: docker login -u $DOCKER_USER -p $DOCKER_PASS
-      - run: docker build -t computes/distributed-ai-or-something:map-$CIRCLE_TAG .
+      - run: docker build -t computes/distributed-ai-or-something:map-$CIRCLE_TAG genetics-map
       - run: docker push computes/distributed-ai-or-something:map-$CIRCLE_TAG
   build-and-deploy-reduce:
     machine: true
     steps:
       - checkout
-      - run: cd genetics-reduce
       - run: docker login -u $DOCKER_USER -p $DOCKER_PASS
-      - run: docker build -t computes/distributed-ai-or-something:reduce-$CIRCLE_TAG .
+      - run: docker build -t computes/distributed-ai-or-something:reduce-$CIRCLE_TAG genetics-reduce
       - run: docker push computes/distributed-ai-or-something:reduce-$CIRCLE_TAG
 workflows:
   version: 2
