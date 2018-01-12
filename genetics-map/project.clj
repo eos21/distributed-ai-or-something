@@ -8,6 +8,7 @@
     [org.clojure/data.json "0.2.6"]
     [proto-repl "0.3.1"]
     [random-seed "1.0.0"]
+    [expresso "0.2.2"]
   ]
   :main ^:skip-aot genetics-map.core
   :target-path "target/%s"

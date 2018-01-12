@@ -1,10 +1,19 @@
 (ns genetics-map.simulate
   (:require [genetics-map.math :as math]
-            [random-seed.core :refer [rand rand-int rand-nth]])
+            [random-seed.core :refer [rand rand-int rand-nth]]
+            [clojure.string :refer [join]])
+            
   (:refer-clojure :exclude [rand rand-int rand-nth]))
 
+
+(defn println-error [& strs]
+  (.println *err* (join " " strs)))
+
+(defn format-creature [creature]
+  (str (apply list creature)))
+
 (def operations '(+ - * /))
-(def mutation-rate 0.05)
+(def mutation-rate 0.15)
 (def population-size 100)
 
 (defn pad [n coll val]
@@ -18,6 +27,7 @@
 
 (declare mutate)
 (declare possibly-mutate-gene)
+(declare mutate-gene)
 
 (defn random-operation-gene [gene] (rand-nth operations))
 
@@ -33,8 +43,8 @@
   (let [dice (rand)]
     (cond
       (< dice 0.1) (map possibly-mutate-gene gene)
-      (< dice 0.2) (conj gene [(random-number-gene 1)]))
-      :else (rand-nth (rest gene))))
+      (< dice 0.2) (concat gene (list (random-number-gene 0)))
+      :else (rand-nth (rest gene)))))
 
 (defn mutate-gene [gene]
   (cond
@@ -59,8 +69,8 @@
 
 (defn fitness-on-data [creature creatureFn [x y]]
     (try
-      (+ (math/abs (- y (creatureFn x))) (* (count (flatten creature)) 0.01))
-      (catch Exception e Double/POSITIVE_INFINITY)))
+      (+ (math/abs (- y (creatureFn x))) (* (count (flatten creature)) 0.0001))
+      (catch ArithmeticException e Double/POSITIVE_INFINITY)))
 
 (defn fitness [data creature]
   (let [creatureFn (eval (concat '(fn [x]) [creature]))]

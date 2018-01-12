@@ -157,7 +157,7 @@ main() {
   # echo "split_output_ref: $split_output_ref"
 
   map_refs="$(generate_map_inputs "$split_output_ref")"
-  # echo "map_refs: $map_refs"
+  echo "map_refs: $map_refs"
 
   map_output_refs="$(run_maps "$map_refs")"
   # echo "map_output_refs: $map_output_refs"
