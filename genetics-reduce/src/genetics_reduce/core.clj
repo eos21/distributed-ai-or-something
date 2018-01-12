@@ -23,15 +23,20 @@
 (defn format-creature [creature]
   (str (apply list creature)))
 
+(defn format-population [population]
+  (map format-creature population))
+
 (defn -main
   "Bring the island survivers back for a reunion culling"
   [& args]
   (let [input (parse-input (slurp *in*))]
     (sanity-check-input input)
-    (let [data       (:trainingData (first input))
-          population (apply concat (map :population input))
-          winner     (first (sort-population data population))]
-      (println (json/write-str {
-        :winner  (format-creature winner)
-        :fitness (fitness data winner)
-      })))))
+    (let [data             (:trainingData (first input))
+          population       (apply concat (map :population input))
+          sortedPopulation (sort-population data population)
+          winner           (first sortedPopulation)]
+      (println (json/write-str (merge (first input) {
+        :population (format-population sortedPopulation)
+        :winner     (format-creature winner)
+        :fitness    (fitness data winner)
+      }))))))
