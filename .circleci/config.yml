@@ -1,0 +1,87 @@
+# Golang CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-go/ for more details
+version: 2
+jobs:
+  build-split:
+    machine: true
+    steps:
+      - checkout
+      - run: cd genetics-split
+      - run: docker build .
+  build-map:
+    machine: true
+    steps:
+      - checkout
+      - run: cd genetics-map
+      - run: docker build .
+  build-reduce:
+    machine: true
+    steps:
+      - checkout
+      - run: cd genetics-reduce
+      - run: docker build .
+  build-and-deploy-split:
+    machine: true
+    steps:
+      - checkout
+      - run: cd genetics-split
+      - run: docker login -u $DOCKER_USER -p $DOCKER_PASS
+      - run: docker build -t computes/distributed-ai-or-something:split-$CIRCLE_TAG .
+      - run: docker push computes/distributed-ai-or-something:split-$CIRCLE_TAG
+  build-and-deploy-map:
+    machine: true
+    steps:
+      - checkout
+      - run: cd genetics-map
+      - run: docker login -u $DOCKER_USER -p $DOCKER_PASS
+      - run: docker build -t computes/distributed-ai-or-something:map-$CIRCLE_TAG .
+      - run: docker push computes/distributed-ai-or-something:map-$CIRCLE_TAG
+  build-and-deploy-reduce:
+    machine: true
+    steps:
+      - checkout
+      - run: cd genetics-reduce
+      - run: docker login -u $DOCKER_USER -p $DOCKER_PASS
+      - run: docker build -t computes/distributed-ai-or-something:reduce-$CIRCLE_TAG .
+      - run: docker push computes/distributed-ai-or-something:reduce-$CIRCLE_TAG
+workflows:
+  version: 2
+  build-and-deploy:
+    jobs:
+      - build-split:
+          filters:
+            tags:
+              ignore: /v[0-9]+(\.[0-9]+)*/
+            branches:
+              only: /.*/
+      - build-map:
+          filters:
+            tags:
+              ignore: /v[0-9]+(\.[0-9]+)*/
+            branches:
+              only: /.*/
+      - build-reduce:
+          filters:
+            tags:
+              ignore: /v[0-9]+(\.[0-9]+)*/
+            branches:
+              only: /.*/
+      - build-and-deploy-split:
+          filters:
+            tags:
+              only: /v[0-9]+(\.[0-9]+)*/
+            branches:
+              ignore: /.*/
+      - build-and-deploy-map:
+          filters:
+            tags:
+              only: /v[0-9]+(\.[0-9]+)*/
+            branches:
+              ignore: /.*/
+      - build-and-deploy-reduce:
+          filters:
+            tags:
+              only: /v[0-9]+(\.[0-9]+)*/
+            branches:
+              ignore: /.*/
