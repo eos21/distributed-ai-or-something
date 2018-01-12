@@ -41,7 +41,7 @@ jobs:
       - run: docker push computes/distributed-ai-or-something:reduce-$CIRCLE_TAG
 workflows:
   version: 2
-  build-and-deploy:
+  build-or-deploy:
     jobs:
       - build-split:
           filters:
