@@ -5,6 +5,7 @@
 (defn fatal [msg]
   "Print a message and exit 1"
   (println "USAGE: lein run <n> <algorithm>\n")
+  (println "calculates (x y) pairs for all x values where -n <= x <= n")
   (println "Example: lein run 100 '(* x 2)'\n")
   (println msg)
   (System/exit 1))
@@ -13,9 +14,18 @@
   "generate a (x y) pair where y = f(x)"
   (list x (f x)))
 
+(defn make-negative [n]
+  (* n -1))
+
 (defn generate-data [f n]
   "generate n (x y) pairs where y = f(x)"
-  (map (partial generate-data-point f) (range n)))
+  (let [indexes         (range n)
+        negativeIndexes (map make-negative (rest indexes))
+        positiveData (map (partial generate-data-point f) indexes)
+        negativeData (map (partial generate-data-point f) negativeIndexes)]
+        (concat (reverse negativeData) positiveData)))
+
+(generate-data #(+ % 1) 4)
 
 (defn parse-func [funcStr]
   "Parses a function from a string and returns a function that takes 'x'"
