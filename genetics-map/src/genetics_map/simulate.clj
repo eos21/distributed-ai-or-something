@@ -5,16 +5,27 @@
 
   (:refer-clojure :exclude [rand rand-int rand-nth]))
 
+(def operations '(+ - * /))
+(def mutation-rate 1.0)
+(def population-size 100)
+
+(defn set-random-seed! [seed] (random-seed.core/set-random-seed! seed))
+
+(defn without-nth [n coll]
+  (keep-indexed #(if-not (= n %1) %2) coll))
+
+(defn nest-gene [gene] (list (rand-nth operations) gene))
+(defn append-gene [gene] (concat gene (list (rand-nth '(1 x)))))
+
+(defn remove-gene [gene]
+  (let [n (rand-nth (range 1 (count gene)))]
+    (without-nth n gene)))
 
 (defn println-error [& strs]
   (.println *err* (join " " strs)))
 
 (defn format-creature [creature]
   (str (apply list creature)))
-
-(def operations '(+ - * /))
-(def mutation-rate 0.15)
-(def population-size 100)
 
 (defn pad [n coll val]
   (take n (concat coll (repeat val))))
@@ -29,38 +40,22 @@
 (declare possibly-mutate-gene)
 (declare mutate-gene)
 
-(defn random-operation-gene [gene]
-  (rand-nth operations))
-
-(defn random-number-gene [gene]
-  (rand-nth [
-    (list '+ gene 1)
-    (list '- gene 1)
-    (list '+ gene 'x)
-    (list '- gene 'x)
-  ]))
-
 (defn random-list-gene [gene]
-  (let [dice (rand)]
-    (cond
-      (< dice 0.2) (map mutate-gene gene)
-      (< dice 0.4) (concat gene (list (random-number-gene 0)))
-      (< dice 0.6) (random-number-gene gene)
-      :else (rand-nth (rest gene)))))
+  (rand-nth [
+      (append-gene gene)
+      (nest-gene gene)
+      (remove-gene gene)
+    ]))
 
 (defn mutate-gene [gene]
-  (cond
-    (some #(= gene %) operations) (random-operation-gene gene)
-    (list? gene) (random-list-gene gene)
-    :else (random-number-gene gene)))
+  (if (coll? gene)
+    (random-list-gene gene)
+    gene))
 
-(defn possibly-mutate-gene [gene]
+(defn mutate [gene]
   (if (> (rand) mutation-rate)
   gene
   (mutate-gene gene)))
-
-(defn mutate [creature]
-  (map possibly-mutate-gene creature))
 
 (defn breed [population]
   (let [
