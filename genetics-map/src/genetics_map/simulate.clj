@@ -35,7 +35,9 @@
 (defn random-number-gene [gene]
   (rand-nth [
     (list '+ gene 1)
+    (list '- gene 1)
     (list '+ gene 'x)
+    (list '- gene 'x)
   ]))
 
 (defn random-list-gene [gene]
@@ -43,6 +45,7 @@
     (cond
       (< dice 0.2) (map mutate-gene gene)
       (< dice 0.4) (concat gene (list (random-number-gene 0)))
+      (< dice 0.6) (random-number-gene gene)
       :else (rand-nth (rest gene)))))
 
 (defn mutate-gene [gene]
