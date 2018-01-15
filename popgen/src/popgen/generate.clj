@@ -3,7 +3,7 @@
   (:refer-clojure :exclude [rand rand-int rand-nth]))
 
 (defn random-number []
-  (rand-nth (conj (range 10) 'x)))
+  (rand-nth '(1 x)))
 
 (defn random-op []
   (rand-nth ['+ '- '*]))

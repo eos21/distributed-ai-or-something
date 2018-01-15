@@ -6,7 +6,7 @@
   (:refer-clojure :exclude [rand rand-int rand-nth]))
 
 (def operations '(+ - * /))
-(def mutation-rate 1.0)
+(def mutation-rate 0.50)
 (def population-size 100)
 
 (defn set-random-seed! [seed] (random-seed.core/set-random-seed! seed))
@@ -18,8 +18,10 @@
 (defn append-gene [gene] (concat gene (list (rand-nth '(1 x)))))
 
 (defn remove-gene [gene]
-  (let [n (rand-nth (range 1 (count gene)))]
-    (without-nth n gene)))
+  (if (<= (count gene) 2)
+    gene
+    (let [n (rand-nth (range 1 (count gene)))]
+      (without-nth n gene))))
 
 (defn println-error [& strs]
   (.println *err* (join " " strs)))
@@ -37,7 +39,6 @@
   (rand-gene (remove nil? args)))
 
 (declare mutate)
-(declare possibly-mutate-gene)
 (declare mutate-gene)
 
 (defn random-list-gene [gene]
@@ -50,12 +51,12 @@
 (defn mutate-gene [gene]
   (if (coll? gene)
     (random-list-gene gene)
-    gene))
+    (or (println "not a coll" gene) gene)))
 
 (defn mutate [gene]
   (if (> (rand) mutation-rate)
   gene
-  (mutate-gene gene)))
+  (mutate (mutate-gene gene))))
 
 (defn breed [population]
   (let [
