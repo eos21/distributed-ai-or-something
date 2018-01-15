@@ -46,10 +46,10 @@
       :else (rand-nth (rest gene)))))
 
 (defn mutate-gene [gene]
-    (cond
-      (some #(= gene %) operations) (random-operation-gene gene)
-      (list? gene) (random-list-gene gene)
-      :else (random-number-gene gene)))
+  (cond
+    (some #(= gene %) operations) (random-operation-gene gene)
+    (list? gene) (random-list-gene gene)
+    :else (random-number-gene gene)))
 
 (defn possibly-mutate-gene [gene]
   (if (> (rand) mutation-rate)
