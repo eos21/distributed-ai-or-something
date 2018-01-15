@@ -6,22 +6,10 @@
   (:refer-clojure :exclude [rand rand-int rand-nth]))
 
 (def operations '(+ - * /))
-(def mutation-rate 0.50)
+(def mutation-rate 0.050)
 (def population-size 100)
 
 (defn set-random-seed! [seed] (random-seed.core/set-random-seed! seed))
-
-(defn without-nth [n coll]
-  (keep-indexed #(if-not (= n %1) %2) coll))
-
-(defn nest-gene [gene] (list (rand-nth operations) gene))
-(defn append-gene [gene] (concat gene (list (rand-nth '(1 x)))))
-
-(defn remove-gene [gene]
-  (if (<= (count gene) 2)
-    gene
-    (let [n (rand-nth (range 1 (count gene)))]
-      (without-nth n gene))))
 
 (defn println-error [& strs]
   (.println *err* (join " " strs)))
@@ -31,6 +19,33 @@
 
 (defn pad [n coll val]
   (take n (concat coll (repeat val))))
+
+(defn without-nth [coll n]
+  (keep-indexed #(if-not (= n %1) %2) coll))
+
+; can't use clojure shuffle cause it doesn't take a seed
+(defn shuffle-col [col]
+  (if (<= (count col) 1) col
+    (let [n (rand-int (count col))]
+      (conj (shuffle-col (without-nth col n)) (nth col n)))))
+
+(defn shuffle-gene [gene]
+  ; (println "gene" gene)
+  (let [operand (first gene)
+        strands (apply list (rest gene))]
+        ; (println-error "operand" operand)
+        ; (println-error "strands" strands)
+        ; (println-error "shuffled" (conj (shuffle strands) operand))
+        (conj (apply list (shuffle-col strands)) operand)))
+
+(defn nest-gene [gene] (list (rand-nth operations) gene))
+(defn append-gene [gene] (concat gene (list (rand-nth '(1 x)))))
+
+(defn remove-gene [gene]
+  (if (<= (count gene) 2)
+    gene
+    (let [n (rand-nth (range 1 (count gene)))]
+      (without-nth gene n))))
 
 (defn rand-gene [genes]
   (if (empty? genes) nil (rand-nth genes)))
@@ -42,11 +57,12 @@
 (declare mutate-gene)
 
 (defn random-list-gene [gene]
-  (rand-nth [
+  (shuffle-gene
+    (rand-nth [
       (append-gene gene)
       (nest-gene gene)
       (remove-gene gene)
-    ]))
+    ])))
 
 (defn mutate-gene [gene]
   (if (coll? gene)
