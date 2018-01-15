@@ -36,7 +36,8 @@
     (def generation (simulate/epoch generation trainingData children childrenThatSurvive))
     (println-error
       (simulate/fitness trainingData (first generation))
-      (format-creature (first generation))))
+      (format-creature (first generation)))
+    (println-error "original" (stringify-creature (first generation))))
 
   (println (json/write-str {
     :population (map stringify-creature generation)
