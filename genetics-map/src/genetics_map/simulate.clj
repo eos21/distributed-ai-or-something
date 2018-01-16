@@ -1,12 +1,15 @@
 (ns genetics-map.simulate
-  (:require [genetics-map.math :as math]
-            [random-seed.core :refer [rand rand-int rand-nth]]
-            [clojure.string :refer [join]])
+  (:require
+    [clojure.string :refer [join]]
+    [genetics-map.complicate :as complicate]
+    [genetics-map.math :as math]
+    [random-seed.core :refer [rand rand-int rand-nth]]
+    [numeric.expresso.core :refer [simplify]])
 
   (:refer-clojure :exclude [rand rand-int rand-nth]))
 
 (def operations '(+ - * /))
-(def mutation-rate 0.050)
+(def mutation-rate 0.50)
 (def population-size 100)
 
 (defn set-random-seed! [seed] (random-seed.core/set-random-seed! seed))
@@ -56,6 +59,10 @@
 (declare mutate)
 (declare mutate-gene)
 
+(defn make-simple [creature]
+  (let [simple (complicate/complicate-gene (simplify creature))]
+    (if (coll? simple) simple (list '+ simple))))
+
 (defn random-list-gene [gene]
   (shuffle-gene
     (rand-nth [
@@ -78,8 +85,11 @@
   (let [
       dad (pad 100 (rand-nth population) nil)
       mom (pad 100 (rand-nth population) nil)
+      child (mutate (remove nil? (map pick-gene dad mom)))
     ]
-    (mutate (remove nil? (map pick-gene dad mom)))))
+    (try
+      (make-simple child)
+      (catch ArithmeticException e child))))
 
 (defn fitness-on-data [creature creatureFn [x y]]
     (try
