@@ -1,10 +1,18 @@
 (ns genetics-map.simulate
-  (:require [genetics-map.math :as math]
-            [random-seed.core :refer [rand rand-int rand-nth]]
-            [clojure.string :refer [join]])
-            
+  (:require
+    [clojure.string :refer [join]]
+    [genetics-map.complicate :as complicate]
+    [genetics-map.math :as math]
+    [random-seed.core :refer [rand rand-int rand-nth]]
+    [numeric.expresso.core :refer [simplify]])
+
   (:refer-clojure :exclude [rand rand-int rand-nth]))
 
+(def operations '(+ - * /))
+(def mutation-rate 0.50)
+(def population-size 100)
+
+(defn set-random-seed! [seed] (random-seed.core/set-random-seed! seed))
 
 (defn println-error [& strs]
   (.println *err* (join " " strs)))
@@ -12,12 +20,35 @@
 (defn format-creature [creature]
   (str (apply list creature)))
 
-(def operations '(+ - * /))
-(def mutation-rate 0.15)
-(def population-size 100)
-
 (defn pad [n coll val]
   (take n (concat coll (repeat val))))
+
+(defn without-nth [coll n]
+  (keep-indexed #(if-not (= n %1) %2) coll))
+
+; can't use clojure shuffle cause it doesn't take a seed
+(defn shuffle-col [col]
+  (if (<= (count col) 1) col
+    (let [n (rand-int (count col))]
+      (conj (shuffle-col (without-nth col n)) (nth col n)))))
+
+(defn shuffle-gene [gene]
+  ; (println "gene" gene)
+  (let [operand (first gene)
+        strands (apply list (rest gene))]
+        ; (println-error "operand" operand)
+        ; (println-error "strands" strands)
+        ; (println-error "shuffled" (conj (shuffle strands) operand))
+        (conj (apply list (shuffle-col strands)) operand)))
+
+(defn nest-gene [gene] (list (rand-nth operations) gene))
+(defn append-gene [gene] (concat gene (list (rand-nth '(1 x)))))
+
+(defn remove-gene [gene]
+  (if (<= (count gene) 2)
+    gene
+    (let [n (rand-nth (range 1 (count gene)))]
+      (without-nth gene n))))
 
 (defn rand-gene [genes]
   (if (empty? genes) nil (rand-nth genes)))
@@ -26,51 +57,45 @@
   (rand-gene (remove nil? args)))
 
 (declare mutate)
-(declare possibly-mutate-gene)
 (declare mutate-gene)
 
-(defn random-operation-gene [gene] (rand-nth operations))
-
-(defn random-number-gene [gene]
-  (rand-nth [
-    (list '- gene 1)
-    (list '+ gene 1)
-    (list '+ gene 'x)
-    (list '- gene 'x)
-  ]))
+(defn make-simple [creature]
+  (let [simple (complicate/complicate-gene (simplify creature))]
+    (if (coll? simple) simple (list '+ simple))))
 
 (defn random-list-gene [gene]
-  (let [dice (rand)]
-    (cond
-      (< dice 0.1) (map possibly-mutate-gene gene)
-      (< dice 0.2) (concat gene (list (random-number-gene 0)))
-      :else (rand-nth (rest gene)))))
+  (shuffle-gene
+    (rand-nth [
+      (append-gene gene)
+      (nest-gene gene)
+      (remove-gene gene)
+    ])))
 
 (defn mutate-gene [gene]
-  (cond
-    (some #(= gene %) operations) (random-operation-gene gene)
-    (list? gene) (random-list-gene gene)
-    :else (random-number-gene gene)))
+  (if (coll? gene)
+    (random-list-gene gene)
+    (or (println "not a coll" gene) gene)))
 
-(defn possibly-mutate-gene [gene]
+(defn mutate [gene]
   (if (> (rand) mutation-rate)
   gene
-  (mutate-gene gene)))
-
-(defn mutate [creature]
-  (map possibly-mutate-gene creature))
+  (mutate (mutate-gene gene))))
 
 (defn breed [population]
   (let [
       dad (pad 100 (rand-nth population) nil)
       mom (pad 100 (rand-nth population) nil)
+      child (mutate (remove nil? (map pick-gene dad mom)))
     ]
-    (mutate (remove nil? (map pick-gene dad mom)))))
+    (try
+      (make-simple child)
+      (catch ArithmeticException e child))))
 
 (defn fitness-on-data [creature creatureFn [x y]]
     (try
       (+ (math/abs (- y (creatureFn x))) (* (count (flatten creature)) 0.0001))
-      (catch ArithmeticException e Double/POSITIVE_INFINITY)))
+      (catch ArithmeticException e Double/POSITIVE_INFINITY)
+      (catch Exception e (println-error (format-creature creature)))))
 
 (defn fitness [data creature]
   (let [creatureFn (eval (concat '(fn [x]) [creature]))]
