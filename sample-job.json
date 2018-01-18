@@ -2,11 +2,11 @@
   "input": {
     "/": "zdpuAtCzm7ihkBiSXyasgQ5P6N9NoiRSKABjaLiBmtiM34Ppq"
   },
-  "uuid": "bfea3b7e-d9c2-447f-a0be-6ec92bbaa453",
+  "uuid": "fc710afd-3286-4c21-8a59-1b5e1efd8c07",
   "split": {
     "runner": {
       "metadata": {
-        "image": "computes/distributed-ai-or-something:split-v2.0.0"
+        "image": "computes/distributed-ai-or-something:split-v3.0.0"
       },
       "type": "docker-json-runner"
     }
@@ -14,7 +14,7 @@
   "map": {
     "runner": {
       "metadata": {
-        "image": "computes/distributed-ai-or-something:map-v2.0.0"
+        "image": "computes/distributed-ai-or-something:map-v3.0.0"
       },
       "type": "docker-json-runner"
     }
@@ -22,7 +22,7 @@
   "reduce": {
     "runner": {
       "metadata": {
-        "image": "computes/distributed-ai-or-something:reduce-v2.0.0"
+        "image": "computes/distributed-ai-or-something:reduce-v3.0.0"
       },
       "type": "docker-json-runner"
     }
