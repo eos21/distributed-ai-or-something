@@ -1,0 +1,12 @@
+image: computes/distributed-ai-or-something:reduce-v2.2.0
+manifests:
+  -
+    image: computes/distributed-ai-or-something:reduce-v2.2.0-arm
+    platform:
+      architecture: arm
+      os: linux
+  -
+    image: computes/distributed-ai-or-something:reduce-v2.2.0-amd64
+    platform:
+      architecture: amd64
+      os: linux

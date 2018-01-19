@@ -12,3 +12,4 @@ pom.xml.asc
 .git
 Dockerfile
 .dockerignore
+manifest.yml
