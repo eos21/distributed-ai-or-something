@@ -1,4 +1,4 @@
-FROM computes/docker-lein:latest as build
+FROM computes/lein:latest as build
 
 WORKDIR /workdir
 COPY . .
