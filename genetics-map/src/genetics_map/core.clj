@@ -22,7 +22,8 @@
     (catch ArithmeticException e expression)))
 
 (defn stringify-creature [creature]
-  (str (apply list creature)))
+  (try (str (apply list creature))
+    (catch java.lang.IllegalArgumentException e (str creature))))
 
 (defn format-creature [creature]
   (stringify-creature (try-simplify creature)))
@@ -32,12 +33,13 @@
   (set-random-seed! seed)
   (def generation population)
   (dotimes [n epochs]
-    (println-error "epoch" (format "%s/%s" n epochs))
+    (println-error "\nepoch" (format "%s/%s" n epochs))
     (def generation (simulate/epoch generation trainingData children childrenThatSurvive))
     (println-error
-      (simulate/fitness trainingData (first generation))
-      (format-creature (first generation)))
-    (println-error "original" (stringify-creature (first generation)))
+      "best creature"
+      (stringify-creature (first generation))
+      (simulate/fitness trainingData (first generation)))
+    ; (println-error "original" (stringify-creature (first generation)))
     (println-error "sorted" (apply list (map stringify-creature generation)))
   )
 
