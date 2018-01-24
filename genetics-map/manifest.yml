@@ -1,12 +1,12 @@
-image: computes/distributed-ai-or-something:map-v2.2.0
+image: computes/distributed-ai-or-something:map-v2.2.2
 manifests:
   -
-    image: computes/distributed-ai-or-something:map-v2.2.0-arm
+    image: computes/distributed-ai-or-something:map-v2.2.2-arm
     platform:
       architecture: arm
       os: linux
   -
-    image: computes/distributed-ai-or-something:map-v2.2.0-amd64
+    image: computes/distributed-ai-or-something:map-v2.2.2-amd64
     platform:
       architecture: amd64
       os: linux
