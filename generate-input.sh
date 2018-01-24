@@ -1,16 +1,18 @@
 #!/bin/bash
 
-CHILDREN=100
-CHILDREN_THAT_SURVIVE=10
-EPOCHS=100
-DATA_SIZE=100
+CHILDREN=20
+CHILDREN_THAT_SURVIVE=5
+EPOCHS=50
+DATA_SIZE=10
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 generate_data() {
   set -e -o pipefail
   local algorithm="$1"
 
-  pushd "datagen" &> /dev/null
-  lein run "$DATA_SIZE" "$algorithm" | ipfs dag put
+  pushd "$DIR/datagen" &> /dev/null
+  env LEIN_FAST_TRAMPOLINE=y lein trampoline run "$DATA_SIZE" "$algorithm" | ipfs dag put
   popd &> /dev/null
 }
 
@@ -29,8 +31,8 @@ generate_population() {
   set -e -o pipefail
   local seed="$1"
 
-  pushd "popgen" &> /dev/null
-  lein run "$seed" "$CHILDREN" | ipfs dag put
+  pushd "$DIR/popgen" &> /dev/null
+  env LEIN_FAST_TRAMPOLINE=y lein trampoline run "$seed" "$CHILDREN" | ipfs dag put
   popd &> /dev/null
 }
 
@@ -89,11 +91,11 @@ run_maps() {
 
   local map_refs=( $1 )
 
-  pushd "genetics-map" &> /dev/null
+  pushd "$DIR/genetics-map" &> /dev/null
 
   for map_ref in "${map_refs[@]}"; do
     ipfs dag get "$map_ref" \
-    | lein run \
+    | env LEIN_FAST_TRAMPOLINE=y lein trampoline run \
     | ipfs dag put
   done
 
@@ -104,10 +106,10 @@ run_reduce() {
   set -e -o pipefail
 
   local reduce_ref="$1"
-  pushd "genetics-reduce" &>/dev/null
+  pushd "$DIR/genetics-reduce" &>/dev/null
 
   ipfs dag get "$reduce_ref" \
-  | lein run \
+  | env LEIN_FAST_TRAMPOLINE=y lein trampoline run \
   | ipfs dag put
 
   popd &>/dev/null
@@ -117,10 +119,10 @@ run_split() {
   set -e -o pipefail
 
   local split_ref="$1"
-  pushd "genetics-split" &>/dev/null
+  pushd "$DIR/genetics-split" &>/dev/null
 
   ipfs dag get "$split_ref" \
-  | lein run \
+  | env LEIN_FAST_TRAMPOLINE=y lein trampoline run \
   | ipfs dag put
 
   popd &>/dev/null

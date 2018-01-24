@@ -1,4 +1,4 @@
-(defproject genetics-reduce "2.2.0"
+(defproject genetics-reduce "2.2.2"
   :description "Bring the island survivers back for a reunion culling"
   :url "https://github.com/computes/distributed-ai-or-something/tree/master/genetics-reduce"
   :license {:name "MIT"

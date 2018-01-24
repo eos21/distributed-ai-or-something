@@ -1,4 +1,4 @@
-(defproject genetics-map "2.2.0"
+(defproject genetics-map "2.2.2"
   :description "Simulate multiple breed/culling epochs on an island"
   :url "https://github.com/computes/distributed-ai-or-something/tree/master/genetics-map"
   :license {:name "MIT"

@@ -1,4 +1,4 @@
-(defproject genetics-split "2.2.0"
+(defproject genetics-split "2.2.2"
   :description "Split a population input into island inputs"
   :url "https://github.com/computes/distributed-ai-or-something/tree/master/genetics-split"
   :license {:name "MIT"
