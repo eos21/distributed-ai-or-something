@@ -56,7 +56,7 @@ main(){
   build_split "$version" \
     && build_map "$version" \
     && build_reduce "$version" \
-    && push_spit "$version" \
+    && push_split "$version" \
     && push_map "$version" \
     && push_reduce "$version" 
 }
