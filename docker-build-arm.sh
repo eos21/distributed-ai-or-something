@@ -53,11 +53,11 @@ push_reduce(){
 main(){
   local version="$1"
 
-  build_split \
-    && build_map \
-    && build_reduce \
-    && push_spit \
-    && push_map \
-    && push_reduce
+  build_split "$version" \
+    && build_map "$version" \
+    && build_reduce "$version" \
+    && push_spit "$version" \
+    && push_map "$version" \
+    && push_reduce "$version" 
 }
 main "$@"
