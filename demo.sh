@@ -23,7 +23,12 @@ main(){
   echo "generating input (takes ~10s)"
   pushd "$DIR/genetics-map" > /dev/null
   input_hash="$(generate_input "$formula")"
-  ipfs dag get "$input_hash"
+  echo ""
+  echo "Initial population"
+  ipfs dag get "$input_hash/population"
+  echo ""
+  echo "Training Dataset"
+  ipfs dag get "$input_hash/trainingData"
   echo ""
   echo "running genetic algorith to solve for '$formula'"
   ipfs dag get "$input_hash" | lein run
